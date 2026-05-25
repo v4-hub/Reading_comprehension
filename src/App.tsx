@@ -249,10 +249,10 @@ function App() {
       <AnimatePresence>
         {sidebarOpen && (
           <motion.div 
-            initial={{ x: -300, opacity: 0 }}
+            initial={{ x: -288, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -300, opacity: 0 }}
-            className="w-80 bg-white border-r border-slate-200 overflow-hidden flex-shrink-0 flex flex-col shadow-xl z-30"
+            exit={{ x: -288, opacity: 0 }}
+            className="w-72 bg-white border-r border-slate-200 overflow-hidden flex-shrink-0 flex flex-col shadow-xl z-30"
           >
             <div className="p-6 border-b border-slate-100 bg-gradient-to-br from-blue-600 to-indigo-700 text-white relative">
               <button 
@@ -538,44 +538,45 @@ function App() {
                 </div>
              </div>
 
-             <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#F1F5F9]/30">
-               <div className="max-w-4xl mx-auto p-12 space-y-12 pb-32">
-                 
-                 {/* Passage Card */}
+             <div className="flex-1 flex overflow-hidden bg-[#F1F5F9]/30">
+               {/* Left Column: Passage */}
+               <div className="w-[55%] flex-shrink-0 h-full overflow-y-auto custom-scrollbar px-6 lg:px-10 py-8 border-r border-slate-200">
                  <motion.div 
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 overflow-hidden"
+                    className="bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden"
                  >
-                    <div className="p-10 text-[18px] leading-[1.8] text-slate-700 font-serif antialiased relative">
+                    <div className="p-8 text-[18px] leading-[1.8] text-slate-700 font-serif antialiased relative">
                       {loadingKeywords[exercise.id] && (
                         <div className="absolute top-4 right-4 flex items-center gap-2 text-xs font-bold text-slate-400 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100">
                           <Loader2 className="w-3 h-3 animate-spin"/> 分析生词中...
                         </div>
                       )}
                       {exercise.content.split('\n\n').map((paragraph, idx) => (
-                        <p key={idx} className="mb-6 indent-10 first-letter:text-2xl first-letter:font-bold first-letter:text-blue-600">
+                        <p key={idx} className="mb-6 indent-8 first-letter:text-2xl first-letter:font-bold first-letter:text-blue-600">
                           {renderPassageParagraph(paragraph, keywordsMap[exercise.id])}
                         </p>
                       ))}
                     </div>
                  </motion.div>
+               </div>
 
-                 {/* Questions section */}
-                 <div className="space-y-10">
+               {/* Right Column: Questions */}
+               <div className="flex-1 h-full overflow-y-auto custom-scrollbar px-6 py-8 bg-white/50 flex flex-col">
+                 <div className="space-y-8 flex-1">
                     <div className="flex items-center justify-between">
-                       <h3 className="text-2xl font-black text-slate-900 flex items-center gap-3">
-                         <HelpCircle className="w-7 h-7 text-blue-600" />
-                         题目内容 (Questions)
+                       <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
+                         <HelpCircle className="w-6 h-6 text-blue-600" />
+                         题目内容
                        </h3>
                        {!isCurrentSubmitted && (
-                         <div className="text-sm font-bold text-slate-400 italic">
+                         <div className="text-xs font-bold text-slate-400 italic">
                            已完成: {Object.keys(currentAnswers).length} / {exercise.questions.length}
                          </div>
                        )}
                     </div>
 
-                    <div className="space-y-8">
+                    <div className="space-y-6">
                        {exercise.questions.map((q, idx) => {
                          const selectedAnswer = currentAnswers[q.id];
                          const isCorrect = selectedAnswer === q.correctAnswerIndex;
@@ -586,7 +587,7 @@ function App() {
                              initial={{ opacity: 0, x: -20 }}
                              whileInView={{ opacity: 1, x: 0 }}
                              viewport={{ once: true }}
-                             className={`bg-white p-8 rounded-[2rem] shadow-sm border ${
+                             className={`bg-white p-6 rounded-[2rem] shadow-sm border ${
                                isCurrentSubmitted 
                                 ? isCorrect 
                                   ? 'border-green-100 ring-4 ring-green-500/5' 
@@ -594,12 +595,12 @@ function App() {
                                 : 'border-slate-100 hover:border-slate-200 transition-colors'
                              }`}
                            >
-                             <div className="font-bold text-xl mb-8 text-slate-900 flex items-start gap-4">
-                               <span className="flex-shrink-0 w-9 h-9 bg-slate-100 text-slate-400 rounded-xl flex items-center justify-center font-black italic text-sm">{idx + 1}</span>
-                               <span className="mt-1 leading-snug">{q.text}</span>
+                             <div className="font-bold text-[17px] mb-6 text-slate-900 flex items-start gap-4">
+                               <span className="flex-shrink-0 w-8 h-8 bg-slate-100 text-slate-400 rounded-xl flex items-center justify-center font-black italic text-sm">{idx + 1}</span>
+                               <span className="mt-0.5 leading-snug">{q.text}</span>
                              </div>
 
-                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             <div className="grid grid-cols-1 gap-3">
                                {q.options.map((opt, optIdx) => {
                                  const isSelected = selectedAnswer === optIdx;
                                  const isTheCorrectOne = optIdx === q.correctAnswerIndex;
@@ -630,12 +631,12 @@ function App() {
                                      key={optIdx}
                                      onClick={() => handleSelectAnswer(q.id, optIdx)}
                                      disabled={isCurrentSubmitted}
-                                     className={`p-5 rounded-2xl border transition-all text-left flex items-center gap-4 group ${containerStyle}`}
+                                     className={`p-4 rounded-2xl border transition-all text-left flex items-center gap-3 group ${containerStyle}`}
                                    >
-                                     <div className={`w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-xl border font-black text-sm transition-all ${badgeStyle}`}>
+                                     <div className={`w-7 h-7 flex-shrink-0 flex items-center justify-center rounded-lg border font-black text-sm transition-all ${badgeStyle}`}>
                                        {String.fromCharCode(65 + optIdx)}
                                      </div>
-                                     <span className="font-medium text-[15px] leading-tight">{opt}</span>
+                                     <span className="font-medium text-[14px] leading-tight">{opt}</span>
                                    </button>
                                  )
                                })}
@@ -645,17 +646,17 @@ function App() {
                                <motion.div 
                                  initial={{ opacity: 0, height: 0 }}
                                  animate={{ opacity: 1, height: 'auto' }}
-                                 className="mt-8 pt-8 border-t border-slate-100"
+                                 className="mt-6 pt-6 border-t border-slate-100"
                                >
-                                 <div className={`p-6 rounded-2xl flex items-start gap-4 ${isCorrect ? 'bg-green-50/50' : 'bg-red-50/50'}`}>
+                                 <div className={`p-5 rounded-2xl flex items-start gap-4 ${isCorrect ? 'bg-green-50/50' : 'bg-red-50/50'}`}>
                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isCorrect ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
-                                      {isCorrect ? <CheckCircle className="w-6 h-6" /> : <HelpCircle className="w-6 h-6" />}
+                                      {isCorrect ? <CheckCircle className="w-5 h-5" /> : <HelpCircle className="w-5 h-5" />}
                                    </div>
                                    <div>
                                       <div className={`text-sm font-black uppercase tracking-widest ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
                                         {isCorrect ? '回答正确！' : '回答错误'}
                                       </div>
-                                      <div className="mt-3 text-[#475569] font-serif leading-relaxed text-[15px]">
+                                      <div className="mt-2 text-[#475569] font-serif leading-relaxed text-[14px]">
                                         <span className="font-black text-slate-900 bg-white px-2 py-0.5 rounded shadow-sm mr-2 italic border border-slate-100">Analysis</span> 
                                         {q.explanation}
                                       </div>
@@ -670,14 +671,14 @@ function App() {
                  </div>
 
                  {/* Navigation footer in-content */}
-                 <div className="pt-12 flex justify-between items-center gap-4">
+                 <div className="pt-10 pb-6 flex flex-col xl:flex-row justify-between items-center gap-4">
                     <button 
                       onClick={() => {
                         const nextId = currentExerciseIndex - 1;
                         if (nextId >= 0) setCurrentExerciseIndex(nextId);
                       }}
                       disabled={currentExerciseIndex === 0}
-                      className="flex items-center gap-2 px-8 py-4 bg-white border border-slate-200 rounded-2xl text-slate-600 font-bold hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95"
+                      className="w-full xl:w-auto flex justify-center items-center gap-2 px-6 py-3.5 bg-white border border-slate-200 rounded-xl text-slate-600 font-bold hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95"
                     >
                       <ArrowLeft className="w-5 h-5" /> Previous
                     </button>
@@ -685,9 +686,9 @@ function App() {
                     {!isCurrentSubmitted ? (
                       <button 
                         onClick={handleSubmit}
-                        className="flex items-center gap-3 px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black text-lg shadow-xl shadow-indigo-600/20 transition-all hover:scale-[1.03] active:scale-95 ring-4 ring-indigo-600/5 group"
+                        className="w-full xl:w-auto flex justify-center items-center gap-2 px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-black text-base shadow-lg shadow-indigo-600/20 transition-all hover:scale-[1.03] active:scale-95 ring-4 ring-indigo-600/5 group"
                       >
-                        Submit & Analyze <CheckCircle className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+                        Submit <CheckCircle className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                       </button>
                     ) : (
                       <button 
@@ -697,10 +698,10 @@ function App() {
                           else setCurrentExerciseIndex(null);
                         }}
                         disabled={isGenerating}
-                        className="flex items-center gap-3 px-10 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black text-lg shadow-xl shadow-blue-600/20 transition-all hover:scale-[1.03] active:scale-95 ring-4 ring-blue-600/5 group disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full xl:w-auto flex justify-center items-center gap-2 px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-black text-base shadow-lg shadow-blue-600/20 transition-all hover:scale-[1.03] active:scale-95 ring-4 ring-blue-600/5 group disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {isGenerating ? 'Generating...' : currentExerciseIndex === TOTAL_EXERCISES - 1 ? 'Finish Special Training' : 'Continue to Next'} 
-                        {!isGenerating && <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />}
+                        {isGenerating ? 'Generating...' : currentExerciseIndex === TOTAL_EXERCISES - 1 ? 'Finish' : 'Next'} 
+                        {!isGenerating && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
                       </button>
                     )}
                  </div>
